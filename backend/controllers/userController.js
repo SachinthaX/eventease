@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import User from '../models/User.js';
+import sendEmail from '../utils/sendEmail.js'; //
 
 // Get own profile
 export const getUserProfile = asyncHandler(async (req, res) => {
@@ -128,11 +129,25 @@ export const updateUserByAdmin = asyncHandler(async (req, res) => {
     throw new Error('User not found');
   }
 
-  user.name = req.body.name || user.name;
-  user.email = req.body.email || user.email;
-  // Optional: allow role update too
-  if (req.body.role) {
-    user.role = req.body.role;
+  const { name, email, role, password } = req.body;
+
+  if (name) user.name = name;
+  if (email) user.email = email;
+  if (role) user.role = role;
+
+  if (password && password.trim().length >= 6) {
+    
+    user.password = password;
+
+    // Optional: Send email
+  
+      await sendEmail({
+        to: user.email,
+        subject: 'Your EventEase password was changed',
+        text: `Hello ${user.name},\n\nYour password was reset by an admin.\n\nIf this wasn't your request, please contact support.`
+      });
+      
+    
   }
 
   const updatedUser = await user.save();
