@@ -3,7 +3,7 @@ import {
     Box, Heading, Table, Thead, Tbody, Tr, Th, Td,
     Button, useToast, Spinner, Center, Tag, IconButton, HStack, Input, Flex,
     Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter,
-    FormControl, FormLabel, useDisclosure, Skeleton, SkeletonText
+    FormControl, FormLabel, useDisclosure, Skeleton, SkeletonText, Text
   } from '@chakra-ui/react';
   import { useEffect, useState } from 'react';
   import axios from '../services/axios';
@@ -19,6 +19,7 @@ import {
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(true);
     const [editUser, setEditUser] = useState(null);
+    const [resetPassword, setResetPassword] = useState('');
     const [newUser, setNewUser] = useState({ name: '', email: '', password: '', role: 'user' });
     const [form, setForm] = useState({ name: '', email: '' });
   
@@ -108,17 +109,20 @@ import {
   
     const handleEditSubmit = async () => {
       try {
-        const { data } = await axios.put(`/api/users/admin/${editUser._id}`, form, {
+        const payload = { ...form };
+        if (resetPassword.trim()) payload.password = resetPassword.trim();
+    
+        const { data } = await axios.put(`/api/users/admin/${editUser._id}`, payload, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setUsers(users.map(u => (u._id === data._id ? data : u)));
         toast({ title: 'User updated', status: 'success' });
         onEditClose();
+        setResetPassword('');
       } catch (err) {
         toast({ title: 'Edit failed', description: err.response?.data?.message, status: 'error' });
       }
     };
-  
     const handleAddSubmit = async () => {
       try {
         const { data } = await axios.post('/api/users/admin', newUser, {
@@ -132,6 +136,32 @@ import {
         toast({ title: 'Add failed', description: err.response?.data?.message, status: 'error' });
       }
     };
+
+    const {
+      isOpen: isPasswordOpen,
+      onOpen: onPasswordOpen,
+      onClose: onPasswordClose
+    } = useDisclosure();
+    
+
+    const [passwordData, setPasswordData] = useState({
+      currentPassword: '',
+      newPassword: ''
+    });
+    
+    const handlePasswordChange = async () => {
+      try {
+        await axios.put('/api/users/password', passwordData, {
+          headers: { Authorization: `Bearer ${user.token}` }
+        });
+        toast({ title: 'Password updated', status: 'success' });
+        setPasswordData({ currentPassword: '', newPassword: '' });
+        onPasswordClose();
+      } catch (err) {
+        toast({ title: 'Password change failed', status: 'error' });
+      }
+    };
+    
   
     if (loading) {
         return (
@@ -151,12 +181,44 @@ import {
             <Input placeholder="Search by name or email" value={search} onChange={(e) => setSearch(e.target.value)} width="250px" />
             <Button colorScheme="green" onClick={onAddOpen} leftIcon={<AddIcon />}>Add User</Button>
             <Button colorScheme="blue" onClick={handleExport} leftIcon={<DownloadIcon />}>Export Excel</Button>
+            <Button onClick={onPasswordOpen} colorScheme="purple" variant="outline">Change Admin Password</Button>
           </HStack>
         </Flex>
         <Heading size="md" mb={4}>
         Total Users: {users.length}
         </Heading>
-  
+        <Modal isOpen={isPasswordOpen} onClose={onPasswordClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Change Password</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <FormControl mb={4}>
+                <FormLabel>Current Password</FormLabel>
+                <Input
+                  type="password"
+                  value={passwordData.currentPassword}
+                  onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>New Password</FormLabel>
+                <Input
+                  type="password"
+                  value={passwordData.newPassword}
+                  onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                />
+              </FormControl>
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme="teal" mr={3} onClick={handlePasswordChange}>
+                Save
+              </Button>
+              <Button onClick={onPasswordClose}>Cancel</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
         <Table variant="simple" size="md">
           <Thead>
             <Tr>
@@ -209,6 +271,15 @@ import {
               <FormControl>
                 <FormLabel>Email</FormLabel>
                 <Input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>Reset Password</FormLabel>
+                <Input
+                  placeholder="New password (optional)"
+                  type="password"
+                  value={resetPassword}
+                  onChange={(e) => setResetPassword(e.target.value)}
+                />
               </FormControl>
             </ModalBody>
             <ModalFooter>
