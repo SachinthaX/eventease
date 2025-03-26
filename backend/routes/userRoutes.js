@@ -5,7 +5,10 @@ import {
   updatePassword,
   getAllUsers,
   deleteUser,
-  updateUserRole
+  updateUserRole,
+  createUserByAdmin,
+  updateUserByAdmin,
+  deleteOwnAccount
 } from '../controllers/userController.js';
 import { protect, adminOnly } from '../middleware/authMiddleware.js';
 
@@ -17,10 +20,14 @@ router.use(protect);
 router.get('/profile', getUserProfile);
 router.put('/profile', updateProfile);
 router.put('/password', updatePassword);
+router.delete('/profile', protect, deleteOwnAccount);
 
 // Admin routes
 router.get('/admin', adminOnly, getAllUsers);
 router.delete('/admin/:id', adminOnly, deleteUser);
+router.post('/admin', protect, adminOnly, createUserByAdmin);
 router.put('/admin/:id/role', adminOnly, updateUserRole);
+router.put('/admin/:id', protect, adminOnly, updateUserByAdmin);
+
 
 export default router;

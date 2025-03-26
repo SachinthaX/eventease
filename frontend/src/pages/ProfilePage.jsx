@@ -72,9 +72,10 @@ import {
   
     const handleDeleteProfile = async () => {
       try {
-        await axios.delete(`/api/users/admin/${user._id}`, {
+        await axios.delete('/api/users/profile', {
           headers: { Authorization: `Bearer ${user.token}` },
         });
+        
         toast({ title: 'Profile deleted', status: 'info', duration: 2000 });
         logout();
         navigate('/register');
