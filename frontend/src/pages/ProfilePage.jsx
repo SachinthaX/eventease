@@ -2,7 +2,7 @@
 import {
     Box, Heading, VStack, useToast, Spinner,
     FormControl, FormLabel, Input, Button, Tabs, TabList, TabPanels, Tab, TabPanel, Text,
-    Alert, AlertIcon, HStack
+    Alert, AlertIcon, HStack, useColorModeValue 
   } from '@chakra-ui/react';
   import { useEffect, useState } from 'react';
   import axios from '../services/axios';
@@ -17,6 +17,8 @@ import {
     const [loading, setLoading] = useState(true);
     const toast = useToast();
     const navigate = useNavigate();
+    const textColor = useColorModeValue('gray.800', 'whiteAlpha.900');
+    const cardBg = useColorModeValue('white', 'gray.700');
   
     useEffect(() => {
       if (!user?.token) {
@@ -87,7 +89,7 @@ import {
     if (loading) return <Spinner size="xl" mt={10} color="teal.400" />;
   
     return (
-      <Box maxW="3xl" mx="auto" mt={10} p={8} borderWidth="1px" borderRadius="2xl" boxShadow="lg" bg="white">
+      <Box bg={cardBg} color={textColor} p={6} borderRadius="lg" maxW="3xl" mx="auto" mt={10}  borderWidth="1px"  boxShadow="lg" >
         <Heading mb={6} size="lg" textAlign="center" color="teal.600">User Profile</Heading>
   
         <Tabs variant="soft-rounded" colorScheme="teal">
