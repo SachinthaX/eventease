@@ -1,120 +1,130 @@
-// src/pages/HomePage.jsx
-import { Box, Heading, Text, Button, Stack, Image, SimpleGrid, Icon, useColorModeValue } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { MdEvent, MdDashboard, MdFeedback, MdSecurity } from 'react-icons/md';
+import {
+  Box,
+  Container,
+  Flex,
+  Heading,
+  Text,
+  Stack,
+  Button,
+  SimpleGrid,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
+//import UpcomingEvents from "./UpcomingEvents";
 
-const HomePage = () => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
-
-  const features = [
-    {
-      icon: MdEvent,
-      title: 'Smart Event Management',
-      desc: 'Plan, publish, and promote your events with ease using our intuitive tools.'
-    },
-    {
-      icon: MdDashboard,
-      title: 'Admin Dashboard',
-      desc: 'Admins can manage users, events, and monitor system-wide activity securely.'
-    },
-    {
-      icon: MdFeedback,
-      title: 'Feedback & Ratings',
-      desc: 'Collect valuable feedback to improve future events and user experience.'
-    },
-    {
-      icon: MdSecurity,
-      title: 'Secure & Role-Based Access',
-      desc: 'Powerful authentication with role-based control for users and admins.'
-    },
-  ];
+const Home = () => {
+  const gradient = useColorModeValue(
+    "linear(to-r, teal.400, purple.500)",
+    "linear(to-r, teal.300, purple.400)"
+  );
 
   return (
-    <Box maxW="7xl" mx="auto" p={8} mt={10}>
-      <Stack spacing={6} align="center" textAlign="center">
-        <Heading size="2xl" bgGradient="linear(to-r, teal.400, purple.500)" bgClip="text">
-          Welcome to EventEase
-        </Heading>
-        <Text fontSize="lg" color="gray.600">
-          Your smart event management system. Seamless, secure, and intuitive.
-        </Text>
-        
-        <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
-          <Button colorScheme="teal" size="lg" onClick={() => navigate('/upcoming-events')}>
-            Browse Events
+    <Box>
+      {/* Hero Section */}
+      <Box
+        bgGradient={gradient}
+        color="white"
+        py={{ base: 20, md: 28 }}
+        textAlign="center"
+      >
+        <Container maxW="7xl">
+          <Heading fontSize={{ base: "3xl", md: "5xl" }} fontWeight="bold" mb={4}>
+            Welcome to EventEase
+          </Heading>
+          <Text fontSize={{ base: "md", md: "xl" }} mb={6}>
+            Your one-stop solution for seamless event management.
+          </Text>
+          <Button
+            as={RouterLink}
+            to="/events"
+            size="lg"
+            colorScheme="whiteAlpha"
+            bg="white"
+            color="teal.600"
+            _hover={{ bg: "gray.100" }}
+            fontWeight="bold"
+          >
+            Explore Events
           </Button>
-          {!user && (
-            <Button variant="outline" colorScheme="purple" size="lg" onClick={() => navigate('/register')}>
-              Get Started
-            </Button>
-          )}
-        </Stack>
-      </Stack>
-
-      <Box mt={16}>
-        <Heading size="lg" mb={6} textAlign="center">Platform Features</Heading>
-        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
-          {features.map((feat, idx) => (
-            <Stack key={idx} direction="row" spacing={4} align="flex-start">
-              <Icon as={feat.icon} boxSize={8} color="teal.400" />
-              <Box>
-                <Text fontSize="lg" fontWeight="bold" mb={1}>{feat.title}</Text>
-                <Text color={useColorModeValue('gray.600', 'gray.400')}>{feat.desc}</Text>
-              </Box>
-            </Stack>
-          ))}
-        </SimpleGrid>
+        </Container>
       </Box>
-      <Stack mt={20} spacing={6} textAlign="center">
-        <Heading size="lg">Why Choose EventEase?</Heading>
-        <Text fontSize="md" maxW="3xl" mx="auto" color="gray.500">
-            From idea to execution, EventEase empowers organizers and attendees with modern tools to
-            manage, track, and enjoy events — all in one place.
-        </Text>
-        </Stack>
 
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={10} mt={12}>
-        <Stack textAlign="center" spacing={4}>
-            <Heading size="md">1. Discover Events</Heading>
-            <Text>Explore a variety of upcoming events and book your spot with ease.</Text>
-        </Stack>
-        <Stack textAlign="center" spacing={4}>
-            <Heading size="md">2. Manage & Track</Heading>
-            <Text>Admins can create, edit, and manage events — all from one dashboard.</Text>
-        </Stack>
-        <Stack textAlign="center" spacing={4}>
-            <Heading size="md">3. Engage & Feedback</Heading>
-            <Text>Attendees can leave feedback and resell tickets securely if needed.</Text>
-        </Stack>
-        </SimpleGrid>
+      {/* Features Section */}
+      <Box py={20} bg={useColorModeValue("gray.50", "gray.800")}>
+        <Container maxW="6xl">
+          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={10}>
+            {[
+              {
+                title: "Easy Event Creation",
+                text: "Plan and manage your events with just a few clicks.",
+              },
+              {
+                title: "Real-Time Updates",
+                text: "Get instant notifications for upcoming events and changes.",
+              },
+              {
+                title: "Ticket Management",
+                text: "Track ticket sales and manage your event's seating arrangements.",
+              },
+            ].map((feature, index) => (
+              <Box
+                key={index}
+                p={6}
+                borderRadius="lg"
+                bg="white"
+                boxShadow="lg"
+                _hover={{ transform: "translateY(-4px)", transition: "0.3s" }}
+              >
+                <Heading size="md" mb={2} color="teal.500">
+                  {feature.title}
+                </Heading>
+                <Text color="gray.600">{feature.text}</Text>
+              </Box>
+            ))}
+          </SimpleGrid>
+        </Container>
+      </Box>
 
-        <Box mt={20} textAlign="center">
-        <Heading size="lg" mb={6}>What Users Say</Heading>
-        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8}>
-            <Box p={6} borderWidth="1px" borderRadius="lg" bg="whiteAlpha.50">
-            <Text fontStyle="italic">"EventEase made managing my tech meetup a breeze. Loved the dashboard!"</Text>
-            <Text fontWeight="bold" mt={2}>– Alex G., Event Organizer</Text>
-            </Box>
-            <Box p={6} borderWidth="1px" borderRadius="lg" bg="whiteAlpha.50">
-            <Text fontStyle="italic">"I booked my concert tickets in seconds and even resold one later. 10/10!"</Text>
-            <Text fontWeight="bold" mt={2}>– Priya M., Attendee</Text>
-            </Box>
-        </SimpleGrid>
-        </Box>
-        <Box mt={20} textAlign="center">
-        <Heading size="lg" mb={4}>Ready to create or join your next event?</Heading>
-        <Button colorScheme="teal" size="lg" onClick={() => navigate('/register')}>
-            Get Started
-        </Button>
-        </Box>
+      {/* Upcoming Events */}
+      {/*<Box py={20} bg={useColorModeValue("white", "gray.900")}>
+        <Container maxW="6xl">
+          <Heading textAlign="center" size="xl" mb={10} color="teal.600">
+            Upcoming Events
+          </Heading>
+          <UpcomingEvents />
+        </Container>
+      </Box>*/}
 
-
-
-
+      {/* CTA Section */}
+      <Box
+        py={24}
+        textAlign="center"
+        bgGradient="linear(to-r, purple.500, teal.500)"
+        color="white"
+      >
+        <Container maxW="7xl">
+          <Heading fontSize={{ base: "2xl", md: "4xl" }} mb={4}>
+            Join the EventEase Community
+          </Heading>
+          <Text fontSize="lg" mb={6}>
+            Stay connected with your audience and grow your event's impact.
+          </Text>
+          <Button
+            as={RouterLink}
+            to="/events"
+            size="lg"
+            colorScheme="whiteAlpha"
+            variant="outline"
+            borderColor="white"
+            _hover={{ bg: "whiteAlpha.300" }}
+            rounded="full"
+          >
+            Start Organizing
+          </Button>
+        </Container>
+      </Box>
     </Box>
   );
 };
 
-export default HomePage;
+export default Home;
