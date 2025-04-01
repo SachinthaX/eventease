@@ -95,7 +95,7 @@ import {
                     aria-label="Toggle color mode"
                     variant="ghost"
                     onClick={toggleColorMode}
-                /> */} //remove
+                /> */} //remove dark mode
   
             {/*  Auth Dropdown */}
             {user ? (
