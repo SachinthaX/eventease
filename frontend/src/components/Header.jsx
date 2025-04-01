@@ -90,12 +90,12 @@ import {
               )
             )}
 
-                <IconButton
+                {/* <IconButton
                     icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
                     aria-label="Toggle color mode"
                     variant="ghost"
                     onClick={toggleColorMode}
-                />
+                /> */} //remove dark mode
   
             {/*  Auth Dropdown */}
             {user ? (
