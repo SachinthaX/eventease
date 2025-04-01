@@ -39,12 +39,12 @@ import {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </FormControl>
-            <Button colorScheme="teal" type="submit" width="full">Send Reset Link</Button>
+            <Button colorScheme="blue" type="submit" width="full">Send Reset Link</Button>
           </VStack>
         </form>
         {submitted && (
-          <Text mt={4} fontSize="sm" color="green.500" textAlign="center">
-            If this email exists, a reset link has been sent.
+          <Text mt={4} fontSize="sm" color="blue" textAlign="center">
+            A reset link has been sent. Please check your email.
           </Text>
         )}
       </Box>
