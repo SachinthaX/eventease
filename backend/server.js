@@ -1,7 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import passport from 'passport';
-//import session from 'express-session'; // optional, but for completeness
 import connectDB from './config/db.js';
 import configurePassport from './config/passport.js';
 import authRoutes from './routes/authRoutes.js';

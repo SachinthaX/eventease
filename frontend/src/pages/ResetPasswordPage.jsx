@@ -37,7 +37,7 @@ import {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </FormControl>
-            <Button colorScheme="teal" type="submit" width="full">Reset Password</Button>
+            <Button colorScheme="blue" type="submit" width="full">Reset Password</Button>
           </VStack>
         </form>
       </Box>
